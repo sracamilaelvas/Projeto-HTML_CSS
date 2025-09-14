@@ -1,0 +1,80 @@
+Documentação Técnica do Projeto – Módulo HTML5 e CSS3
+1. Objetivo Geral
+Desenvolver uma aplicação web estática responsiva e acessível, utilizando HTML5 semântico, CSS3 (Flexbox/Grid) e Bootstrap, com boas práticas de codificação, responsividade e conformidade com WCAG 2.2 nível AA.
+2. Identificação do Projeto
+Nome do projeto: Sistema de Gerenciamento de Tarefas
+Autoria: Camila Gomes de Sá Elvas
+Repositório (URL): https://github.com/camila/projeto-tarefas (exemplo)
+Página publicada (URL): https://camila-tarefas.vercel.app (exemplo)
+Resumo: Aplicação simples para login e gerenciamento de tarefas pessoais. Permite cadastrar, editar, concluir e excluir tarefas, além de filtrar por status (todas, pendentes, concluídas).
+3. Arquitetura de Informação e Páginas
+Estrutura de diretórios:
+/
+|-- index.html (página de login)
+|-- dashboard.html (página principal do sistema)
+|-- style.css (estilos do login)
+
+Mapa do site:
+[x] Login (index.html)
+[x] Dashboard (dashboard da Camila.html)
+4. Requisitos
+Requisitos funcionais:
+1) O usuário deve conseguir acessar a tela de login e inserir email e senha.
+2) O usuário deve poder cadastrar novas tarefas no dashboard.
+3) O usuário deve poder editar, excluir e concluir tarefas.
+4) O usuário deve poder filtrar tarefas por status.
+Requisitos não funcionais:
+1) Layout responsivo (funciona em celular, tablet e desktop).
+2) Contraste mínimo de 4.5:1 entre texto e fundo.
+3) Navegação por teclado funcional e foco visível.
+4) Estrutura semântica HTML5 e boas práticas CSS3.
+5. Informações Técnicas — HTML5
+• Uso de <!DOCTYPE html> e <html lang='pt-BR'> para acessibilidade.
+• Páginas estruturadas com header/nav/main/footer.
+• Formulários com rótulos (<label for>) associados.
+• Apenas um <h1> por página, headings em ordem hierárquica.
+• Elementos semânticos usados em vez de divs sempre que possível.
+• Textos alternativos em imagens e botões com labels claros.
+6. Informações Técnicas — CSS3
+• Reset básico aplicado com * { box-sizing: border-box }.
+• Paleta de cores definida: fundo escuro (#0e1629), caixas (#1e293b), destaques em verde (#22c55e) e azul (#3b82f6).
+• Layout responsivo mobile-first, com media queries (max-width: 480px).
+• Uso de Flexbox e Grid (via Bootstrap na tela de dashboard).
+• Bordas arredondadas, sombras e espaçamentos consistentes.
+• Hover states em botões para feedback visual.
+• Garantia de foco visível em links e botões.
+7. Plano de Acessibilidade
+[x] HTML com lang definido (pt-BR).
+[x] Apenas um <h1> por página.
+[x] Headings em ordem lógica.
+[x] Labels associadas a inputs de formulário.
+[x] Navegação por teclado funcional.
+[x] Contraste mínimo 4.5:1.
+[x] Botões e links com nomes claros.
+[ ] Implementação de aria-live (não implementada no login).
+8. Plano de Responsividade
+• Mobile-first (até 480px): layout simplificado, caixas e botões ocupam largura total.
+• Tablets (768px): melhor aproveitamento do espaço, login centralizado.
+• Desktop (?1366px): dashboard exibe tarefas em cards de 3 colunas.
+
+9. Plano de Testes
+Caso de teste 1: Acessar a tela de cadastro, preencher dados, clicar em 'Entrar'.
+Resultado esperado: Redireciona para o login.
+Status: Aprovado.
+
+Caso de teste 2: Adicionar nova tarefa no dashboard.
+Resultado esperado: Tarefa aparece na lista com status definido.
+Status: Aprovado.
+
+Caso de teste 3: Concluir tarefa existente.
+Resultado esperado: Badge de 'Concluída' exibida, botão 'Concluir' desativado.
+Status: Aprovado.
+10. Registro de Alterações (Changelog)
+03/09/2025 - Camila Gomes de Sá Elvas - Criação do index.html (login).
+06/09/2025 - Camila Gomes de Sá Elvas - Criação do dashboard.html com Bootstrap.
+07/09/2025 - Camila Gomes de Sá Elvas - Implementação do style.css (login).
+08/09/2025 - Camila Gomes de Sá Elvas - Alterações no Dashboard.
+11. Declaração do Estudante
+Declaro que este trabalho foi realizado de forma individual por Camila Gomes de Sá Elvas e que todas as fontes de terceiros utilizadas foram devidamente citadas.
+
+Assinatura: ______________________________  Data: 10/09/2025
