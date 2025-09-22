@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerenciamento de Tarefas</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    .badge-pendente { background-color: #ffc107; }
+    .badge-concluida { background-color: #28a745; }
+    .card-tarefa {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .card-tarefa.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .btn-filter.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+
+    /* Media queries extras */
+    @media (max-width: 576px) {
+      h2 { font-size: 1.4rem; text-align: center; }
+      .navbar-brand { font-size: 1rem; }
+      .btn { font-size: 0.8rem; padding: 6px 10px; }
+      .card-body { font-size: 0.85rem; }
+    }
+    @media (min-width: 577px) and (max-width: 991px) {
+      h2 { font-size: 1.6rem; }
+      .navbar-brand { font-size: 1.1rem; }
+      .card-body { font-size: 0.9rem; }
+    }
+    @media (min-width: 992px) {
+      h2 { font-size: 1.8rem; }
+      .navbar-brand { font-size: 1.25rem; }
+      .card-body { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#"><i class="bi bi-list-task me-2"></i>Gerenciador</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav" aria-controls="menuNav" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="menuNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-house-door me-1"></i> Início</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bar-chart-line me-1"></i> Relatórios</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-gear me-1"></i> Configurações</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-question-circle me-1"></i> Ajuda</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <div class="container mt-5">
+    <h2 class="mb-4">Lista de Tarefas</h2>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+      <div class="btn-group mb-2 mb-md-0" role="group">
+        <button class="btn btn-outline-primary btn-filter active" onclick="aplicarFiltro('Todas')">Todas</button>
+        <button class="btn btn-outline-primary btn-filter" onclick="aplicarFiltro('Pendente')">Pendentes</button>
+        <button class="btn btn-outline-primary btn-filter" onclick="aplicarFiltro('Em Andamento')">Em Andamento</button>
+        <button class="btn btn-outline-primary btn-filter" onclick="aplicarFiltro('Concluída')">Concluídas</button>
+      </div>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTarefa" onclick="abrirModalAdicionar()">
+        <i class="bi bi-plus-circle me-1"></i> Nova Tarefa
+      </button>
+    </div>
+
+    <!-- Grid de tarefas -->
+    <div class="row g-3" id="listaTarefas"></div>
+  </div>
+
+  <!-- Modal de tarefa -->
+  <div class="modal fade" id="modalTarefa" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="formTarefa">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTarefaLabel">Nova Tarefa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="indiceEdicao" />
+            <div class="mb-3">
+              <label class="form-label">Título</label>
+              <input type="text" class="form-control" id="tituloTarefa" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Descrição</label>
+              <textarea class="form-control" id="descricaoTarefa" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="statusTarefa" required>
+                <option value="Pendente">Pendente</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Concluída">Concluída</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button class="btn btn-primary" type="submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="bg-light text-center text-muted py-3 mt-5">
+    © 2025 Gerenciamento de Tarefas - by Camila Elvas
+  </footer>
+
+  <!-- Bootstrap JS + App -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const listaTarefas = [];
+    let filtroAtual = 'Todas';
+    const listaContainer = document.getElementById('listaTarefas');
+
+    function abrirModalAdicionar() {
+      document.getElementById('modalTarefaLabel').innerText = 'Nova Tarefa';
+      document.getElementById('formTarefa').reset();
+      document.getElementById('indiceEdicao').value = '';
+    }
+
+    function abrirModalEditar(indice) {
+      const tarefa = listaTarefas[indice];
+      document.getElementById('modalTarefaLabel').innerText = 'Editar Tarefa';
+      document.getElementById('tituloTarefa').value = tarefa.titulo;
+      document.getElementById('descricaoTarefa').value = tarefa.descricao;
+      document.getElementById('statusTarefa').value = tarefa.status;
+      document.getElementById('indiceEdicao').value = indice;
+    }
+
+    function concluirTarefa(indice) {
+      listaTarefas[indice].status = 'Concluída';
+      renderizarTarefas();
+    }
+
+    function excluirTarefa(indice) {
+      if (confirm('Deseja excluir esta tarefa?')) {
+        listaTarefas.splice(indice, 1);
+        renderizarTarefas();
+      }
+    }
+
+    document.getElementById('formTarefa').addEventListener('submit', e => {
+      e.preventDefault();
+      const titulo = document.getElementById('tituloTarefa').value;
+      const descricao = document.getElementById('descricaoTarefa').value;
+      const status = document.getElementById('statusTarefa').value;
+      const indice = document.getElementById('indiceEdicao').value;
+      const novaTarefa = { titulo, descricao, status };
+
+      if (indice === '') listaTarefas.push(novaTarefa);
+      else listaTarefas[indice] = novaTarefa;
+
+      bootstrap.Modal.getInstance(document.getElementById('modalTarefa')).hide();
+      renderizarTarefas();
+    });
+
+    function aplicarFiltro(filtro) {
+      filtroAtual = filtro;
+      document.querySelectorAll('.btn-filter').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent === filtro) btn.classList.add('active');
+      });
+      renderizarTarefas();
+    }
+
+    function renderizarTarefas() {
+      listaContainer.innerHTML = '';
+      const tarefasFiltradas = listaTarefas.filter(t => filtroAtual === 'Todas' || t.status === filtroAtual);
+
+      tarefasFiltradas.forEach((tarefa, index) => {
+        const card = document.createElement('div');
+        card.className = 'col-12 col-md-6 col-lg-4'; /* Responsividade do grid */
+        card.innerHTML = `
+          <div class="card card-tarefa show h-100">
+            <div class="card-body">
+              <h5 class="card-title">${tarefa.titulo}</h5>
+              <p class="card-text">${tarefa.descricao}</p>
+              <span class="badge ${tarefa.status === 'Concluída' ? 'badge-concluida' : 'badge-pendente'}">${tarefa.status}</span>
+              <div class="mt-3 d-flex justify-content-between">
+                <button class="btn btn-sm btn-success" onclick="concluirTarefa(${index})" ${tarefa.status === 'Concluída' ? 'disabled' : ''}><i class="bi bi-check-circle"></i> Concluir</button>
+                <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${index})" data-bs-toggle="modal" data-bs-target="#modalTarefa"><i class="bi bi-pencil-square"></i> Editar</button>
+                <button class="btn btn-sm btn-danger" onclick="excluirTarefa(${index})"><i class="bi bi-trash"></i> Excluir</button>
+              </div>
+            </div>
+          </div>`;
+        listaContainer.appendChild(card);
+      });
+
+      document.querySelectorAll('.card-tarefa').forEach((card, i) => {
+        setTimeout(() => card.classList.add('show'), i * 100);
+      });
+    }
+
+    /* Exemplo inicial */
+    listaTarefas.push(
+      { titulo: 'Estudar HTML', descricao: 'Revisar semântica e estrutura básica.', status: 'Pendente' },
+      { titulo: 'Criar layout responsivo', descricao: 'Usar Bootstrap Grid.', status: 'Concluída' },
+      { titulo: 'Praticar JavaScript', descricao: 'Eventos e manipulação DOM.', status: 'Pendente' }
+    );
+    renderizarTarefas();
+  </script>
+</body>
+</html>
