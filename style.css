@@ -1,4 +1,25 @@
-/* Reset básico */
+:root {
+  /* Tema escuro (padrão) */
+  --bg: #0f172a;
+  --box-bg: #1e293b;
+  --text: #ffffff;
+  --input-bg: #334155;
+  --placeholder: #cbd5e1;
+  --btn-bg: #22c55e;
+  --link: #3b82f6;
+}
+
+body.light-mode {
+  /* Tema claro */
+  --bg: #f1f5f9;
+  --box-bg: #ffffff;
+  --text: #1e293b;
+  --input-bg: #e2e8f0;
+  --placeholder: #64748b;
+  --btn-bg: #16a34a;
+  --link: #2563eb;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,102 +27,122 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #0e1629;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', sans-serif;
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
-  text-align: center;
-  width: 100%;
   max-width: 400px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-h1 {
+.title {
   font-size: 24px;
   margin-bottom: 30px;
   line-height: 1.4;
 }
 
-.login-box {
-  background-color: #1e293b;
+.form-box {
+  background-color: var(--box-bg);
   padding: 25px;
   border-radius: 10px;
   text-align: left;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-.login-box h2 {
-  font-size: 18px;
+.form-box h2 {
   margin-bottom: 15px;
-  color: #fff;
 }
 
 label {
   display: block;
+  font-size: 14px;
   margin-bottom: 5px;
-  font-size: 14px;
-  color: #fff;
 }
 
-input {
-  width: 100%;
-  padding: 10px;
+.input-icon {
+  position: relative;
   margin-bottom: 15px;
-  border-radius: 5px;
-  border: none;
-  background-color: #334155;
-  color: #fff;
 }
 
-input::placeholder {
-  color: #ccc;
+.input-icon i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--placeholder);
 }
 
-button {
+.input-icon input {
   width: 100%;
-  padding: 10px;
-  background-color: #22c55e;
-  color: #fff;
+  padding: 10px 10px 10px 35px;
+  background-color: var(--input-bg);
+  color: var(--text);
   border: none;
   border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-button:hover {
-  background-color: #16a34a;
-}
-
-.register-text {
-  text-align: center;
   font-size: 14px;
-  margin-top: 10px;
 }
 
-.register-text a {
-  color: #3b82f6;
+.input-icon input::placeholder {
+  color: var(--placeholder);
+}
+
+input:focus {
+  outline: 2px solid var(--btn-bg);
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--btn-bg);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.btn:hover {
+  background-color: darken(var(--btn-bg), 10%);
+}
+
+.link-text {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.link-text a {
+  color: var(--link);
   text-decoration: none;
 }
 
-.register-text a:hover {
+.link-text a:hover {
   text-decoration: underline;
 }
 
 footer {
   margin-top: 30px;
   font-size: 12px;
-  color: #888;
+  color: var(--placeholder);
+  text-align: center;
 }
 
 footer a {
-  color: #3b82f6;
+  color: var(--link);
   text-decoration: none;
 }
 
@@ -109,17 +150,44 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* Responsivo para telas menores */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 480px) {
-  h1 {
+  .title {
     font-size: 20px;
   }
 
-  .login-box {
+  .form-box {
     padding: 20px;
   }
 
-  button {
+  .btn {
     font-size: 14px;
   }
+}
+
+/* Estilo do botão de alternância de tema */
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+#theme-toggle:hover {
+  transform: scale(1.1);
 }
